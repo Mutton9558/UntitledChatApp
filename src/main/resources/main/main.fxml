@@ -7,44 +7,48 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.UserInterface">
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.UserInterface">
    <children>
-      <VBox alignment="CENTER" spacing="25.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <StackPane layoutX="5.0" layoutY="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
-            <StackPane>
+            <VBox alignment="CENTER" spacing="25.0" style="-fx-background-color: #ffff; -fx-border-color: #0000;">
                <children>
-                  <!-- Welcome Message -->
-                  <VBox alignment="CENTER" spacing="5.0">
+                  <StackPane>
                      <children>
-                        <Label text="Welcome to Paged!">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label layoutY="30.0" text="Good to see you! Can't wait to chat with you!">
-                           <font>
-                              <Font name="System Regular" size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="statusLabel" layoutY="60.0" text="Loading..." visible="false">
-                           <font>
-                              <Font name="System Regular" size="12.0" />
-                           </font>
-                        </Label>
+                        <!-- Welcome Message -->
+                        <VBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <Label text="Welcome to Paged!">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutY="30.0" text="Good to see you! Can't wait to chat with you!">
+                                 <font>
+                                    <Font name="System Regular" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="statusLabel" layoutY="60.0" text="Loading..." visible="false">
+                                 <font>
+                                    <Font name="System Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
+                  </StackPane>
+                  <StackPane>
+                     <children>
+                        <Button contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleOnboardingClick" style="-fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: #0000;" text="Get Started!">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </StackPane>
                </children>
-            </StackPane>
-            <StackPane>
-               <children>
-                  <Button contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleOnboardingClick" text="Get Started!">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Button>
-               </children>
-            </StackPane>
+            </VBox>
          </children>
-      </VBox>
+      </StackPane>
    </children>
 </AnchorPane>
