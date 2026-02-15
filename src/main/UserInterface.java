@@ -1,9 +1,13 @@
+package main;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 // This is where most of the UI is handled
 public class UserInterface extends Application {
@@ -22,7 +26,7 @@ public class UserInterface extends Application {
         Platform.runLater(() -> statusLabel.setText(message));
     }
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) throws IOException {
         System.out.println("This is JavaFX UI thread");
         // Simple Setup
         statusLabel = new Label("Loading User...");
@@ -36,11 +40,10 @@ public class UserInterface extends Application {
         }
 
         // Continue with the setup
-        StackPane root = new StackPane(statusLabel);
-        Scene scene = new Scene(root, 400, 300);
+        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
 
         primaryStage.setTitle("Chat App");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(root, 400, 300));
         primaryStage.show();
     }
 }
