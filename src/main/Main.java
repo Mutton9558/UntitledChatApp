@@ -13,6 +13,22 @@ import javafx.application.Platform;
 
 class ClassGlobalVariables{
     public static AtomicBoolean userFetched = new AtomicBoolean(false);
+    public static List<Contact> userContacts = Collections.synchronizedList(new ArrayList<Contact>());
+    public static List<Messages> recepientChatMessages = Collections.synchronizedList(new ArrayList<Messages>());
+
+}
+
+class Contact{
+    private Recipient contactedPerson;
+    private LocalDateTime lastContactDateTime;
+
+    Contact(Recipient targetContact, LocalDateTime loggedContactTime){
+        this.contactedPerson = targetContact;
+        this.lastContactDateTime = loggedContactTime;
+    }
+
+    public Recipient returnIntendedContact(){ return contactedPerson; }
+    public LocalDateTime returnLastContactTime(){ return lastContactDateTime; }
 }
 
 class Recipient{
@@ -40,13 +56,30 @@ class Recipient{
 
 class User extends Recipient{   
     private List<User> friends;
+    private String phoneNum;
 
     public User(String targetUser, int targetId, Blob targetProfile, String targetStatus, List<User> targetFriends){
         super(targetId, targetUser, targetProfile, targetStatus);
-        this.friends = Collections.synchronizedList(targetFriends);
+        this.friends = Collections.synchronizedList(new ArrayList<User>(targetFriends));
+    }
+
+    // user has linked phone number
+    public User(String targetUser, int targetId, Blob targetProfile, String targetStatus, List<User> targetFriends, String linkedNum){
+        super(targetId, targetUser, targetProfile, targetStatus);
+        this.friends = Collections.synchronizedList(new ArrayList<User>(targetFriends));
+        this.phoneNum = linkedNum;
     }
 
     public List<User> returnFriendList(){ return friends; }
+    public String returnPhoneNum(){ return phoneNum; }
+
+    public void addNewNumber(String newNumber){
+        this.phoneNum = newNumber;
+    }
+
+    public void addFriends(User newFriend){
+        friends.add(newFriend);
+    }
 }
 
 class Roles{
@@ -57,24 +90,28 @@ class Roles{
         this.name = roleName;
         this.color = colorHex;
     }
+
+    public String returnRoleName(){ return this.name; }
+    public int returnColorHex(){ return this.color; }
 }
 
 class GroupMember{
     private User member;
-    private AtomicBoolean isAdmin;
     private List<Roles> userRoles;
 
     public GroupMember(User user){
         this.member = user;
-        this.isAdmin = new AtomicBoolean(false);
-        this.userRoles = new ArrayList<Roles>();
+        this.userRoles = Collections.synchronizedList(new ArrayList<Roles>());
+    }
+
+    public GroupMember(User user, List<Roles> rolesInDb){
+        this.member = user;
+        this.userRoles = Collections.synchronizedList(new ArrayList<Roles>(rolesInDb));
     }
 
     public User returnMember(){ return this.member; }
 
-    public void setAdmin(){
-        this.isAdmin.set(true);
-    }
+    public List<Roles> returnRoleList(){ return this.userRoles; };
 }
 
 class Groups extends Recipient{
@@ -89,28 +126,23 @@ class Groups extends Recipient{
     public Groups(String targetName, int targetId, Blob targetProfile, String targetStatus, User ownerClient){
         super(targetId, targetName, targetProfile, targetStatus);
         this.owner = ownerClient;
-        this.groupMembers = new ArrayList<GroupMember>();
+        this.groupMembers = Collections.synchronizedList(new ArrayList<GroupMember>());
         GroupMember groupOwner = new GroupMember(ownerClient);
         this.groupMembers.add(groupOwner);
-        groupOwner.setAdmin();
     }
 
+    // group in db
     public Groups(String targetName, int targetId, Blob targetProfile, String targetStatus, User ownerClient, List<User> memberList){
         super(targetId, targetName, targetProfile, targetStatus);
         this.owner = ownerClient;
-        this.groupMembers = new ArrayList<GroupMember>();
+        this.groupMembers = Collections.synchronizedList(new ArrayList<GroupMember>());
         Iterator<User> it = memberList.iterator();
         while(it.hasNext()){
             User userToBeAdded = it.next();
             GroupMember newMember = new GroupMember(userToBeAdded);
             this.groupMembers.add(newMember);
-            if(userToBeAdded == ownerClient){
-                newMember.setAdmin();
-            }
         }
     }
-
-    // group in db
 
     public void addMembers(List<User> newMembers){
         Iterator<User> it = newMembers.iterator();
@@ -129,7 +161,7 @@ class Groups extends Recipient{
 }   
 
 class Messages{
-    private User senderId;
+    private User sender;
     private String textContent; 
     private LocalDateTime dateAndTime;
     private int recipientId;
@@ -163,6 +195,10 @@ class UpdateThread extends Thread{
             Platform.runLater(() -> UserInterface.getInstance().updateStatus("Done"));
         } else {
             System.out.println("UI not ready yet, skipping direct update.");
+        }
+
+        while(true){
+            
         }
     }
 }
