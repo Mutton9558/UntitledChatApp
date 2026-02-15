@@ -1,3 +1,4 @@
+package main;
 import java.sql.Blob;
 import java.util.List;
 import java.util.ArrayList;
@@ -6,6 +7,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import javafx.application.Application;
+import javafx.application.Platform;
 
 class ClassGlobalVariables{
     public static AtomicBoolean userFetched = new AtomicBoolean(false);
@@ -131,19 +135,6 @@ class Messages{
     private int recipientId;
 }
 
-// This is where most of the UI is handled
-class UserInterface extends Thread{
-    public void run(){
-        System.out.println("This is the UI thread");
-
-        // login screen
-
-        while(!ClassGlobalVariables.userFetched.get()){
-            // Some loading animation or something
-        }
-    }
-}
-
 // This thread sends messages to clients on our P2P network
 class NetworkThread extends Thread{
     public void run(){
@@ -166,6 +157,13 @@ class UpdateThread extends Thread{
 
         // pulls item from db
         ClassGlobalVariables.userFetched.set(true);
+
+        // Check if UI is alive before calling it
+        if (UserInterface.getInstance() != null) {
+            Platform.runLater(() -> UserInterface.getInstance().updateStatus("Done"));
+        } else {
+            System.out.println("UI not ready yet, skipping direct update.");
+        }
     }
 }
 
@@ -173,13 +171,13 @@ public class Main{
     public static void main(String[] args){
         System.out.println("Hello World");
 
-        // Three threads, one UI, one networking and one db & cache update
-        Thread ui = new UserInterface();
+        // Two threads, one networking and one db & cache update
         Thread network = new NetworkThread();
         Thread updater = new UpdateThread();
 
-        ui.start();
         network.start();
         updater.start();
+
+        Application.launch(UserInterface.class, args);
     }
 }
