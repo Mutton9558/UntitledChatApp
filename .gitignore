@@ -2,6 +2,7 @@
 .vscode/
 .idea/
 .gradle/
+gradle/wrapper/
 *.iml
 
 #Build files
