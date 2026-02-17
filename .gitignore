@@ -1,7 +1,10 @@
 #Configuration file
 .vscode/
 .idea/
+.gradle/
+gradle/wrapper/
 *.iml
 
 #Build files
+build/
 out/

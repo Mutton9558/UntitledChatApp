@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    // Gradle dependencies can be added here, for example:
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+}
+
+application {
+    mainClass = 'main.Main'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "--enable-preview"
+}
+
+run {
+    jvmArgs += ["--enable-preview", "--enable-native-access=javafx.graphics", "-Dprism.order=sw"]
+    environment "DISPLAY", ":0"
+    environment "WAYLAND_DISPLAY", "wayland-0"
+}
