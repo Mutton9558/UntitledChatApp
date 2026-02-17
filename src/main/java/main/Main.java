@@ -5,44 +5,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-
-class ClassGlobalVariables{
-    public static AtomicBoolean userFetched = new AtomicBoolean(false);
-    public static List<Contact> userContacts = Collections.synchronizedList(new ArrayList<Contact>());
-    public static List<Messages> recepientChatMessages = Collections.synchronizedList(new ArrayList<Messages>());
-
-}
-
-class Contact{
-    private Recipient contactedPerson;
-    private LocalDateTime lastContactDateTime;
-
-    Contact(Recipient targetContact, LocalDateTime loggedContactTime){
-        this.contactedPerson = targetContact;
-        this.lastContactDateTime = loggedContactTime;
-    }
-
-    public Recipient returnIntendedContact(){ return contactedPerson; }
-    public LocalDateTime returnLastContactTime(){ return lastContactDateTime; }
-}
 
 class Recipient{
     protected int id;
     protected String name;
     // we will convert blob to url
     protected Blob profilePicture;
-    protected String status;
+    protected String status;   
 
     Recipient(int targetId, String targetName, Blob targetProfile, String targetStatus){
         this.id = targetId;
         this.name = targetName;
         this.profilePicture = targetProfile;
-        this.status = targetStatus;
+        this.status = targetStatus;        
     }
 
     public int returnId(){ return id;}
@@ -161,11 +144,73 @@ class Groups extends Recipient{
 }   
 
 class Messages{
-    private User sender;
+    private int senderId;
     private String textContent; 
     private LocalDateTime dateAndTime;
-    private int recipientId;
+
+    Messages(int targetSender, String messageContent){
+        this.senderId = targetSender;
+        this.textContent = messageContent;
+        this.dateAndTime = LocalDateTime.now();
+    }
+
+    public int returnSenderId(){ return this.senderId; }
+    public String returnMessageContent(){ return this.textContent; }
+    public LocalDateTime returnTimeSent(){ return this.dateAndTime; }
 }
+
+class Conversation{
+    private Recipient contactedRecipient;
+    private List<Messages> conversationMessages;
+
+    Conversation(Recipient targetRecipient){
+        this.contactedRecipient = targetRecipient;
+        this.conversationMessages = Collections.synchronizedList(new ArrayList<Messages>());
+    }
+
+    public Recipient returnRecipient(){ return this.contactedRecipient; }
+    public List<Messages> returnConvoMessages(){ return this.conversationMessages; }
+
+    public void addMessage(Messages newMsg){
+        synchronized(this.conversationMessages){
+            this.conversationMessages.add(newMsg);
+        }
+    }
+}
+
+class ChatListItem{
+    private Conversation chatConvo;
+    private LocalDateTime lastContactDateTime;
+    private int unreadMessageCount;
+
+   ChatListItem(Recipient targetContact, LocalDateTime loggedContactTime){
+        this.chatConvo = new Conversation(targetContact);
+        this.lastContactDateTime = loggedContactTime;
+        this.unreadMessageCount = 0;
+    }
+
+    public void addUnreadMsgCount(){ unreadMessageCount++; }
+    
+    public Conversation returnConversation(){ return chatConvo; }
+    public LocalDateTime returnLastContactTime(){ return lastContactDateTime; }
+    public int returnUnreadMsgCount(){ return unreadMessageCount; }
+}
+
+class ClassGlobalVariables{
+    public static AtomicBoolean userFetched = new AtomicBoolean(false);
+    public static Map<Integer, ChatListItem> userContacts = new ConcurrentHashMap<>();
+    public static ChatListItem curSelectedContact = null;
+
+    // converts collection of contacts into a stream, sort it by last contact time and return the list
+    public static List<ChatListItem> getContactsSortedByRecent() {
+        return userContacts.values()
+            .stream()
+            .sorted(Comparator.comparing(ChatListItem::returnLastContactTime,
+                     Comparator.nullsLast(Comparator.reverseOrder())))
+            .collect(Collectors.toList());
+    }
+}
+
 
 // This thread sends messages to clients on our P2P network
 class NetworkThread extends Thread{
@@ -205,8 +250,6 @@ class UpdateThread extends Thread{
 
 public class Main{
     public static void main(String[] args){
-        System.out.println("Hello World");
-
         // Two threads, one networking and one db & cache update
         Thread network = new NetworkThread();
         Thread updater = new UpdateThread();
