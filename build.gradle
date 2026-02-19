@@ -27,7 +27,7 @@ tasks.withType(JavaCompile) {
 }
 
 run {
-    jvmArgs += ["--enable-preview", "--enable-native-access=javafx.graphics", "-Dprism.order=sw"]
-    environment "DISPLAY", ":0"
-    environment "WAYLAND_DISPLAY", "wayland-0"
+    jvmArgs += ["--enable-preview", "--enable-native-access=javafx.graphics", "-Dprism.order=es2,d3d,sw", "-Dprism.allowhidpi=true", "-Dprism.lcdtext=true"]
+    environment "DISPLAY", System.getenv("DISPLAY") ?: ":0"
+    //environment "WAYLAND_DISPLAY", "wayland-0"
 }

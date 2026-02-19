@@ -4,9 +4,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.util.Objects;
 
 // This is where most of the UI is handled
 public class UserInterface extends Application {
@@ -30,6 +32,8 @@ public class UserInterface extends Application {
         System.out.println("This is JavaFX UI thread");
 
         this.primaryStage = primaryStage;
+        this.primaryStage.setMinHeight(400);
+        this.primaryStage.setMinWidth(600);
 
         showMainUI(false);
     }
@@ -40,12 +44,27 @@ public class UserInterface extends Application {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/" + fxmlFile));
                 Parent root = loader.load();
+                double scaleFactor = 1.0; // Adjust this value to scale the UI
+
+                Scale scale = new Scale(scaleFactor, scaleFactor);
+                scale.setPivotX(0);
+                scale.setPivotY(0);
+                root.getTransforms().add(scale);
+
+                primaryStage.setWidth(primaryStage.getWidth() * scaleFactor);
+                primaryStage.setHeight(primaryStage.getHeight() * scaleFactor);
 
                 Stage stageToUse = (instance != null && instance.primaryStage != null) ? instance.primaryStage : primaryStage;
 
+                // If the stage is not initialized yet, create a new one
                 if (stageToUse != null) {
                     Scene scene = new Scene(root);
                     stageToUse.setScene(scene);
+
+                    // Load CSS
+                    String cssPath = Objects.requireNonNull(getClass().getResource("/main/onboarding.css")).toExternalForm();
+                    scene.getStylesheets().add(cssPath);
+
                     stageToUse.setTitle("Paged - " + (loggedIn ? "Chat" : "Onboarding"));
                     stageToUse.show();
                 }
