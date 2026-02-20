@@ -9,7 +9,7 @@
 
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.control.Hyperlink?>
-<AnchorPane stylesheets="@onboarding.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainController">
+<AnchorPane stylesheets="@onboarding.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="desktop.MainController">
    <StackPane layoutX="5.0" layoutY="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <VBox alignment="CENTER" style="-fx-background-color: #e4e4e4; -fx-border-color: #0000; -fx-spacing: 25.0">
          <StackPane>

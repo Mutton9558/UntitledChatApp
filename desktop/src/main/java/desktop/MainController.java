@@ -1,4 +1,4 @@
-package main;
+package desktop;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +21,11 @@ public class MainController {
     @FXML
     public void handleOnboardingClick() {
         System.out.println("Button was clicked");
-        UserInterface.getInstance().showMainUI(true);
+        try {
+            UserInterface.getInstance().showMainUI(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

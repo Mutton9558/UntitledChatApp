@@ -1,4 +1,4 @@
-package main;
+package desktop;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +9,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
+import core.AppEngine;
 
 // This is where most of the UI is handled
 public class UserInterface extends Application {
@@ -29,6 +30,8 @@ public class UserInterface extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        AppEngine engine = new AppEngine();
+        engine.start();
         System.out.println("This is JavaFX UI thread");
 
         this.primaryStage = primaryStage;
@@ -42,7 +45,7 @@ public class UserInterface extends Application {
         Platform.runLater(() -> {
             String fxmlFile = loggedIn ? "main.fxml" : "onboarding.fxml";
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/" + fxmlFile));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/desktop/" + fxmlFile));
                 Parent root = loader.load();
                 double scaleFactor = 1.0; // Adjust this value to scale the UI
 
@@ -62,7 +65,7 @@ public class UserInterface extends Application {
                     stageToUse.setScene(scene);
 
                     // Load CSS
-                    String cssPath = Objects.requireNonNull(getClass().getResource("/main/onboarding.css")).toExternalForm();
+                    String cssPath = Objects.requireNonNull(getClass().getResource("/desktop/onboarding.css")).toExternalForm();
                     scene.getStylesheets().add(cssPath);
 
                     stageToUse.setTitle("Paged - " + (loggedIn ? "Chat" : "Onboarding"));
