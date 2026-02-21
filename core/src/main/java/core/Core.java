@@ -1,4 +1,4 @@
-package main;
+package core;
 import java.sql.Blob;
 import java.util.List;
 import java.util.ArrayList;
@@ -10,9 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Comparator;
 import java.util.stream.Collectors;
-
-import javafx.application.Application;
-import javafx.application.Platform;
 
 class Recipient{
     protected int id;
@@ -232,31 +229,24 @@ class UpdateThread extends Thread{
     public void run(){
         System.out.println("This is the update thread");
 
+        // wait for user information from ui
+
         // pulls item from db
         ClassGlobalVariables.userFetched.set(true);
 
         // Check if UI is alive before calling it
-        if (UserInterface.getInstance() != null) {
-            Platform.runLater(() -> UserInterface.getInstance().updateStatus("Done"));
-        } else {
-            System.out.println("UI not ready yet, skipping direct update.");
-        }
 
-        while(true){
-            
-        }
     }
 }
 
-public class Main{
-    public static void main(String[] args){
-        // Two threads, one networking and one db & cache update
-        Thread network = new NetworkThread();
-        Thread updater = new UpdateThread();
+// public class Main{
+//     public static void main(String[] args){
+//         // Two threads, one networking and one db & cache update
+//         Thread network = new NetworkThread();
+//         Thread updater = new UpdateThread();
 
-        network.start();
-        updater.start();
+//         network.start();
+//         updater.start();
 
-        Application.launch(UserInterface.class, args);
-    }
-}
+//     }
+// }
