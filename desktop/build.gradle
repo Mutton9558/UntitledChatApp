@@ -4,6 +4,8 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
+import org.gradle.internal.os.OperatingSystem
+
 repositories {
     mavenCentral()
 }
@@ -26,11 +28,46 @@ tasks.withType(JavaCompile) {
 }
 
 run {
+    // These arguments apply to ALL operating systems
     jvmArgs += [
-        "--enable-preview",
-        "--enable-native-access=javafx.graphics",
-        "-Dprism.order=sw"
+            "--enable-native-access=javafx.graphics"
     ]
-    environment "DISPLAY", ":0"
-    environment "WAYLAND_DISPLAY", "wayland-0"
+
+    if (OperatingSystem.current().isLinux()) {
+
+        if (project.hasProperty("xserver")) {
+            try {
+                def ipCmd = new File("/usr/bin/ip").exists() ? "/usr/bin/ip" : "/sbin/ip"
+                def process = [ipCmd, "route", "show", "default"].execute()
+                process.waitFor()
+                def hostIp = process.text.tokenize()[2]
+
+                if (hostIp == null || hostIp.trim().isEmpty()) {
+                    throw new RuntimeException("IP command returned empty")
+                }
+
+                environment "DISPLAY", "${hostIp}:0.0"
+                environment "GDK_BACKEND", "x11"
+                println "--> Routing display to Windows XServer at ${hostIp}:0.0"
+
+            } catch (Exception e) {
+                println "--> Failed to resolve Windows Host IP: " + e.getMessage()
+                environment "DISPLAY", "127.0.0.1:0.0"
+                environment "GDK_BACKEND", "x11"
+            }
+        } else {
+            def currentDisplay = System.getenv("DISPLAY") ?: ":0"
+            def currentWayland = System.getenv("WAYLAND_DISPLAY") ?: "wayland-0"
+
+            environment "DISPLAY", currentDisplay
+            environment "WAYLAND_DISPLAY", currentWayland
+
+            println "--> Launching via WSLg (DISPLAY=${currentDisplay}, WAYLAND=${currentWayland})"
+        }
+    } else if (OperatingSystem.current().isWindows()) {
+        println "--> Launching natively on Windows with Hardware Acceleration"
+        // Native Windows requires zero environment hacks!
+    } else if (OperatingSystem.current().isMacOsX()) {
+        println "--> Launching natively on macOS"
+    }
 }
