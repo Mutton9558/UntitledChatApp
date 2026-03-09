@@ -61,7 +61,7 @@ public class UserInterface extends Application {
                     stageToUse.setScene(scene);
 
                     // Load CSS
-                    String cssPath = Objects.requireNonNull(getClass().getResource("/desktop/onboarding.css")).toExternalForm();
+                    String cssPath = Objects.requireNonNull(getClass().getResource("/desktop/styles.css")).toExternalForm();
                     scene.getStylesheets().add(cssPath);
 
                     stageToUse.setTitle("Paged - " + (loggedIn ? "Chat" : "Onboarding"));

@@ -1,0 +1,74 @@
+/* Reusable Elements */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.root {
+    -fx-font-family: 'Inter', sans-serif;
+    accentColor: #DFA39D;
+}
+
+Button {
+    -fx-padding: 10 20 10 20;
+    -fx-effect: none;
+    -fx-background-radius: 25px;
+    -fx-background-color: #aeaeae;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color 0.3s ease, -fx-font-weight 0.3s ease;
+}
+
+Button:hover {
+    -fx-background-color: #8e8e8e;
+    -fx-font-weight: bold;
+}
+
+/* Onboarding Screen */
+
+#OnboardingVBox {
+    -fx-spacing: 5.0;
+    -fx-alignment: center;
+}
+
+#WelcomeText {
+    -fx-font-size: 18.0;
+    -fx-font-weight: bold;
+}
+
+#GreetingsLabel {
+    -fx-font-size: 12.0;
+}
+
+TextFlow {
+    -fx-alignment: center;
+    -fx-spacing: 5.0;
+}
+
+#LoginForm,
+#SignupForm {
+    -fx-spacing: 10.0;
+    -fx-padding: 20px;
+}
+
+/* Chat Screen */
+
+#ChatListContainer,
+#MessageList,
+#RecipientInfo {
+    -fx-spacing: 10.0;
+}
+
+#ChatListContainer {
+    -fx-background-color: accentColor;
+    -fx-padding: 10;
+
+}
+
+#Title {
+    -fx-font-weight: bold;
+    -fx-font-size: 25.0;
+}
+
+#ChatSearch {
+    -fx-font-size: 14.0;
+    -fx-background-radius: 10.0;
+}
+

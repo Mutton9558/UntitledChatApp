@@ -1,19 +1,10 @@
 package desktop;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 
-import java.io.IOException;
-
 public class MainController {
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private TextField passwordField;
     @FXML
     private VBox LoginForm;
     @FXML

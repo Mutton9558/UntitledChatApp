@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="desktop.MainController">
-
+<AnchorPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="desktop.MainController">
+            <StackPane layoutX="5.0" layoutY="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <HBox alignment="CENTER" style="-fx-spacing: 20.0">
+                    <VBox id="ChatListContainer" minHeight="-Infinity" minWidth="10.0" prefWidth="350">
+                        <HBox alignment="CENTER_LEFT" style="-fx-spacing: 10.0">
+                            <Label id="Title" text="Chats"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button id="NewChatBtn" text="New Chat">
+                                <graphic>
+                                    <FontIcon iconLiteral="mdi2p-plus" iconSize="16"/>
+                                </graphic>
+                            </Button>
+                            <Button id="AccountBtn">
+                                <graphic>
+                                    <FontIcon iconLiteral="mdi2a-account" iconSize="16"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        <TextField id="ChatSearch" promptText="Search" />
+                    </VBox>
+                    <VBox id="MessageList" alignment="CENTER" HBox.hgrow="ALWAYS">
+                        <Label text="Message List Goes Here" />
+                    </VBox>
+                    <VBox id="RecipientInfo" alignment="CENTER" visible="false">
+                        <Label text="Recipient Information and Attachments Go Here" />
+                    </VBox>
+                </HBox>
+            </StackPane>
 </AnchorPane>
