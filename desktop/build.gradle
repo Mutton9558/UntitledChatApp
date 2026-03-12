@@ -4,7 +4,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
-import org.gradle.internal.os.OperatingSystem
+def os = System.getProperty("os.name").toLowerCase()
 
 repositories {
     mavenCentral()
@@ -35,7 +35,7 @@ run {
             "--enable-native-access=javafx.graphics"
     ]
 
-    if (OperatingSystem.current().isLinux()) {
+    if (os.contains("linux")) {
 
         if (project.hasProperty("xserver")) {
             try {
@@ -66,10 +66,10 @@ run {
 
             println "--> Launching via WSLg (DISPLAY=${currentDisplay}, WAYLAND=${currentWayland})"
         }
-    } else if (OperatingSystem.current().isWindows()) {
+    } else if (os.contains("windows")) {
         println "--> Launching natively on Windows with Hardware Acceleration"
         // Native Windows requires zero environment hacks!
-    } else if (OperatingSystem.current().isMacOsX()) {
+    } else if (os.contains("mac")) {
         println "--> Launching natively on macOS"
     }
 }
