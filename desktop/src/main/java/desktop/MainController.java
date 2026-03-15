@@ -1,16 +1,17 @@
 package desktop;
 
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class MainController {
 
@@ -86,6 +87,7 @@ public class MainController {
             setupSearchFilter();
         }
     }
+
 
     private void loadDummyChatList() {
         String[] dummyNames = {"Jasmine Joseph", "Adrian Buttowski", "Alex Burrow", "Meeting at 5!", "Besties!", "Adam <3"};
