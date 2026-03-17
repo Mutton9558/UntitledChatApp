@@ -87,11 +87,13 @@ public class AppEngine {
 
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                ObjectMapper mapper = new ObjectMapper();
+                if(response.statusCode() == 200){
+                    ObjectMapper mapper = new ObjectMapper();
 
-                LoginResponse serverRes = mapper.readValue(response.body(), LoginResponse.class);
-                this.userId = serverRes.getUserID();
-                this.jwt = serverRes.getJwt();
+                    LoginResponse serverRes = mapper.readValue(response.body(), LoginResponse.class);
+                    this.userId = serverRes.getUserID();
+                    this.jwt = serverRes.getJwt();
+                }    
             } catch (IOException e){
                 System.out.println(e);
             } catch (InterruptedException e){
@@ -130,11 +132,13 @@ public class AppEngine {
                     .build();
 
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                ObjectMapper mapper = new ObjectMapper();
-                GetSessionResponse serverRes = mapper.readValue(response.body(), GetSessionResponse.class);
-                if(serverRes.getStatus() == "Success"){
+                if(response.statusCode() == 200){
+                    System.out.println("Valid JWT");
                     this.activeSession = true;
+                } else if (response.statusCode() == 401){
+                    System.out.println("No JWT found");
+                } else if (response.statusCode() == 403){
+                    System.out.println("Invalid JWT");
                 }
             } catch (IOException e){
                 System.out.println(e);
