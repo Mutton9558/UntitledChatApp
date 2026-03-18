@@ -3,9 +3,14 @@ import io.socket.client.Socket;
 import java.net.URI;
 import io.socket.client.IO;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
 import java.util.UUID;
 import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -46,8 +51,12 @@ public class AppEngine {
     }
 
     private void createSocket(){
+        Map<String, String> authData = new HashMap<>();
+        authData.put("userId", this.userId);
+        authData.put("deviceId", this.deviceId);
+
         IO.Options options = IO.Options.builder()
-        .setAuth(Collections.singletonMap("token", this.jwt))
+        .setAuth(authData)
         .build();
         // socket to backend server
         this.clientSocket = IO.socket(URI.create("https://pagedbackend.firebase.whatever"), options);
@@ -55,9 +64,41 @@ public class AppEngine {
 
     public void loginUser(String username, String password){
         if(!this.activeSession){
-            // get user id
-            // get jwt from server
-            generateDeviceID();
+            if(this.deviceId == null){
+                generateDeviceID();
+            }
+
+            try{
+                HttpClient client = HttpClient.newHttpClient();
+
+                String json = String.format("""
+                        {
+                            "username": "%s",
+                            "password": %s,
+                            "deviceID": %s
+                        }
+                """, username, password, this.deviceId);
+                // switch later
+                HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/login"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if(response.statusCode() == 200){
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    LoginResponse serverRes = mapper.readValue(response.body(), LoginResponse.class);
+                    this.userId = serverRes.getUserID();
+                    this.jwt = serverRes.getJwt();
+                }    
+            } catch (IOException e){
+                System.out.println(e);
+            } catch (InterruptedException e){
+                System.out.println(e);
+            }
             createConfig();
             createSocket();
         }
@@ -67,17 +108,14 @@ public class AppEngine {
         try{
             if(configFile.exists()){
                 UserConfig config = mapper.readValue(configFile, UserConfig.class);
-                if(!(config.userId == null)){
-                    this.userId = config.userId;
-                    this.deviceId = config.deviceId;
-                    this.jwt = config.jwtToken;
-                }
+                this.userId = config.getUserId();
+                this.deviceId = config.getDeviceId();
+                this.jwt = config.getToken();
             }
         } catch (IOException e){
             e.printStackTrace();
         }
     }
-
 
     public AppEngine(){
         this.activeSession = false;
@@ -85,18 +123,37 @@ public class AppEngine {
         this.deviceId = null;
         this.jwt = null;
         loadConfig();
-        if(!(this.userId == null)){
-            // check if jwt valid or if user id and device id has been tampered 
-            // if jwt valid and user id & device id not tampered, this.activeSession = true;
+        if(this.jwt != null){
+            try{
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:3000/get_session"))
+                    .header("Authorization", "Bearer " + this.jwt)
+                    .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if(response.statusCode() == 200){
+                    System.out.println("Valid JWT");
+                    this.activeSession = true;
+                } else if (response.statusCode() == 401){
+                    System.out.println("No JWT found");
+                } else if (response.statusCode() == 403){
+                    System.out.println("Invalid JWT");
+                }
+            } catch (IOException e){
+                System.out.println(e);
+            }
+            catch (InterruptedException e){
+                System.out.println(e);
+            }   
         }
+        
         if(this.activeSession){
             createSocket();
         }
     }
 
-    // public void syncMessages(){
-
-    // }
+    public Boolean isActiveSession(){ return this.activeSession; }
 
     public void start() {
         // network = msg, updater = db+cache
