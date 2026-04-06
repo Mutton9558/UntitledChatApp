@@ -30,6 +30,8 @@ import java.security.Signature;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.concurrent.*;
+
 public class AppEngine {
 
     private volatile String userId;
@@ -37,7 +39,8 @@ public class AppEngine {
     private volatile String jwt;
    
     private NetworkThread networkThread;
-    private UpdaterThread updaterThread;
+    private DatabaseThread dbThread;
+    // socket for receiving msg
     private Socket clientSocket;
     private boolean activeSession;
 
@@ -150,7 +153,7 @@ public class AppEngine {
         
     }
 
-    private void send_message(String message, String targetRecipientID){
+    private boolean send_message(String message, String targetRecipientID){
         PublicKey recipientPublic = null;
         try{
             // Fetch recipient's public key from server
@@ -236,16 +239,29 @@ public class AppEngine {
 
             if(res.statusCode() == 200){
                 System.out.println("Message sent successfully!");
-                // code to show ui of "sent"
+                return true;
             } else {
                 System.out.println("Message failed to send.");
-                // code to show ui of "fail"
             }
         } catch (Exception e){
             System.out.println(e);
         } 
+        return false;
     }
     
+    public boolean sendMsgHandler(String message, String targetId){
+        boolean status = false;
+        Future<Boolean> future = this.networkThread.submit(() -> send_message(message, targetId));
+        try{
+            status = future.get();
+        } catch (Exception e){
+            System.out.println("Cannot run task...");
+            e.printStackTrace();
+        }
+        // True -> msg sent, False -> msg failed to send
+        return status;
+    }
+
     private void loadConfig(){
         try{
             if(configFile.exists()){
@@ -310,10 +326,10 @@ public class AppEngine {
     public void start() {
         // network = msg, updater = db+cache
         this.networkThread = new NetworkThread();
-        this.updaterThread = new UpdaterThread();
+        this.dbThread = new DatabaseThread();
 
         Thread network = new Thread(this.networkThread);
-        Thread updater = new Thread(this.updaterThread);
+        Thread updater = new Thread(this.dbThread);
 
         network.start();
         updater.start(); 
