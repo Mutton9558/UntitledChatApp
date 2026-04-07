@@ -37,6 +37,21 @@ public class UserInterface extends Application {
         showMainUI(false);
     }
 
+    public void showLoadingScreen() {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("loading.fxml"));
+                Parent root = loader.load();
+
+                if (primaryStage != null && primaryStage.getScene() != null) {
+                    primaryStage.getScene().setRoot(root);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void showMainUI(boolean loggedIn) {
         Platform.runLater(() -> {
             String fxmlFile = loggedIn ? "main.fxml" : "onboarding.fxml";

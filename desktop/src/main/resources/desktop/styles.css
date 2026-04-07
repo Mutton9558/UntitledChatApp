@@ -51,6 +51,31 @@ TextFlow {
     -fx-padding: 20px;
 }
 
+/* Loading Screen */
+.Greetings {
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+}
+
+.progressBar {
+    -fx-accent: white;
+    -fx-control-inner-background: #b6b6b6;
+    -fx-background-color: #b6b6b6;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.progressBar .track {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.progressBar .bar {
+    -fx-background-radius: 10px;
+    -fx-background-insets: 1;
+}
+
 /* Chat Screen */
 
 #ChatListContainer,
@@ -65,14 +90,72 @@ TextFlow {
 
 }
 
-#Title {
+.context-menu {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-background-color: buttonColor;
+    -fx-border-style: none;
+    -fx-border-radius: 0;
+    -fx-effect: null;
+}
+
+.menu-item {
+    -fx-padding: 8px 25px 8px 15px;
+    -fx-cursor: default;
+}
+
+.menu-item:hover, .menu-item:focused:hover {
+    -fx-background-color: buttonColorhover;
+    -fx-cursor: hand;
+}
+
+.menu-item:focused {
+    -fx-background-color: transparent;
+}
+
+.menu-item .label {
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-font-size: 25.0;
+    -fx-text-fill: white;
+}
+
+.first-item, .first-item:hover {
+    -fx-background-radius: 8 8 0 0;
+}
+
+/* Round the bottom corners of the last item in the list */
+.last-item, .last-item:hover {
+    -fx-background-radius: 0 0 8 8;
 }
 
 #ChatSearch {
     -fx-font-size: 14.0;
     -fx-background-radius: 10.0;
+}
+
+.filter-btn {
+    -fx-font-size: 14.0;
+    -fx-border-color: buttonColor;
+    -fx-border-radius: 25px;
+    -fx-background-color: transparent;
+    -fx-text-fill: buttonColor;
+    -fx-background-radius: 25px;
+    -fx-cursor: hand;
+    -fx-padding: 5 10 5 10;
+    -fx-transition: -fx-background-color 0.3s ease, -fx-text-fill 0.3s ease, -fx-font-weight 0.3s ease;
+}
+
+.filter-btn:hover {
+    -fx-background-color: buttonColorhover;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.filter-btn:selected {
+    -fx-background-color: buttonColor;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
 }
 
 .chat-tab {

@@ -4,19 +4,15 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
 
 public class MainController {
 
     /* Onboarding Variables */
+    @FXML
+    private AnchorPane OnboardingScreen;
     @FXML
     private VBox LoginForm;
     @FXML
@@ -25,6 +21,8 @@ public class MainController {
     private Label SignupText;
     @FXML
     private VBox ForgotPasswordForm;
+    @FXML
+    private StackPane LoadingRoot;
 
     /* Chat Variables */
     @FXML
@@ -43,7 +41,7 @@ public class MainController {
     public void handleOnboardingClick() {
         System.out.println("Button was clicked");
         try {
-            UserInterface.getInstance().showMainUI(true);
+           UserInterface.getInstance().showLoadingScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

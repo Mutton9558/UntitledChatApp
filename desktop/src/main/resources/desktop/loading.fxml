@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #DFA39D" stylesheets="@styles.css" fx:controller="desktop.MainController" fx:id="LoadingRoot">
+    <VBox alignment="CENTER" spacing="20.0">
+        <Label text="Welcome to Paged!" styleClass="Greetings"/>
+        <ProgressBar prefWidth="200.0" prefHeight="10.0" styleClass="progressBar"/>
+    </VBox>
+</StackPane>

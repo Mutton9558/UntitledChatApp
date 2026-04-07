@@ -15,13 +15,21 @@
                                     <FontIcon iconLiteral="mdi2p-plus" iconSize="16"/>
                                 </graphic>
                             </Button>
-                            <Button id="AccountBtn">
+                            <Button fx:id="AccountBtn">
                                 <graphic>
                                     <FontIcon iconLiteral="mdi2a-account" iconSize="16"/>
                                 </graphic>
                             </Button>
                         </HBox>
                         <TextField fx:id="ChatSearch" promptText="Search" />
+                        <HBox alignment="CENTER" spacing="10.0">
+                            <fx:define>
+                                <ToggleGroup fx:id="filterGroup"/>
+                            </fx:define>
+                            <ToggleButton text="All" toggleGroup="$filterGroup" selected="true" userData="All" styleClass="filter-btn"/>
+                            <ToggleButton text="Chats" toggleGroup="$filterGroup" userData="Chat" styleClass="filter-btn"/>
+                            <ToggleButton text="Servers" toggleGroup="$filterGroup" userData="Server" styleClass="filter-btn"/>
+                        </HBox>
                         <VBox fx:id="chatList">
                         </VBox>
                     </VBox>
