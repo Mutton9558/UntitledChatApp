@@ -2,6 +2,7 @@ package desktop;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -40,11 +41,39 @@ public class MainController {
     @FXML
     public void handleOnboardingClick() {
         System.out.println("Button was clicked");
-        try {
-           UserInterface.getInstance().showLoadingScreen();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        UserInterface.getInstance().showLoadingScreen();
+
+        Task<Boolean> authAndFetchTask = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                System.out.println("Fetching data...");
+                Thread.sleep(1000);
+                return true;
+            }
+        };
+
+        authAndFetchTask.setOnSucceeded(event -> {
+            boolean isSuccess = authAndFetchTask.getValue();
+
+            if (isSuccess) {
+                System.out.println("Data Loaded");
+                UserInterface.getInstance().showMainUI(true);
+            } else {
+                System.out.println("Data Not Loaded");
+                UserInterface.getInstance().showMainUI(false);
+            }
+        });
+
+        authAndFetchTask.setOnFailed(event -> {
+            Throwable error = authAndFetchTask.getException();
+            System.err.println("Critical errors" + error.getMessage());
+
+            UserInterface.getInstance().showMainUI(false);
+        });
+
+        Thread fetchThread = new Thread(authAndFetchTask);
+        fetchThread.setDaemon(true);
+        fetchThread.start();
     }
 
     @FXML
