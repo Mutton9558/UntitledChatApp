@@ -41,7 +41,7 @@
                         </HBox>
                         <Region VBox.vgrow="ALWAYS"/>
                         <HBox styleClass="messageListFooter" alignment="CENTER_LEFT">
-                            <TextField fx:id="enterChatBar" promptText="I hate myself" minHeight="50" minWidth="-Infinity" prefWidth="820" />
+                            <TextField fx:id="enterChatBar" promptText="I hate myself" minHeight="50" minWidth="-Infinity" prefWidth="820"  />
                             <Button fx:id="sendAudioButton" onAction="#sendAudioButtonClick">
                                 <graphic>
                                     <FontIcon iconLiteral="mdi2m-microphone" iconSize="16" />

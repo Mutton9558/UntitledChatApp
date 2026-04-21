@@ -142,8 +142,9 @@ TextFlow {
     -fx-background-color: accentColor; 
     -fx-background-radius: 5px;
     -fx-background-insets:9px;
-    -fx-border-insets:13px;
+    -fx-border-insets:10px;
     -fx-font-color: black;
+    -fx-border-color: accentColor;
 }
 
 .messageListFooter {

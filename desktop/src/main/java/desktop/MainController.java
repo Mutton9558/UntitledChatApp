@@ -37,6 +37,8 @@ public class MainController {
     private Button closeButtonMessageList;
     @FXML 
     private Button sendAudioButton;
+    @FXML
+    private TextField enterChatBar;
 
     /* Onboarding functions */
     @FXML
@@ -103,6 +105,12 @@ public class MainController {
     @FXML 
     private void sendAudioButtonClick() {
         System.out.println("Send Button was clicked");
+        
+    }
+    
+    @FXML 
+    public void enterChatItem() {
+        System.out.println("Chat button is being clicked.");
         
     }
 
